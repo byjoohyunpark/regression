@@ -31,8 +31,6 @@ function setup() {
 function draw() {
 
     
-//        colorMode(HSB);
-//    let hsbColor = color(t, 80, 80, 0.2);    
     let hsbColor = color(t, 0, 255, random(20));
 //    noiseShapeColor = new NoFillShapeColor(hsbColor);
     noFill();
@@ -41,15 +39,10 @@ function draw() {
     
     if(bool){
     noiseShape.step();
-//    noiseShapeColor.apply();
     noiseShape.draw();
     frameCounter.step();
 }    
-    //  background(255);
-//  for (var i=0; i<width; i++) {
-//    stroke(255 * noise(0.025 * i, t));
-//    line(i, 0, i, height);
-//  }
+
   t = slider.value()*360;
   console.log(t);
   image(video, 0, windowHeight-150, 200, 150);
@@ -123,21 +116,7 @@ function initialize() {
         noiseTimeScale: random(0.001, 0.005),
     });
     noiseShape.centerPosition.set(0.5 * width + 200, 0.5 * height);
-//    colorMode(HSB, 360, 100, 100, 100);
-//    let hsbColor;
-//    switch (randomInt(3)) {
-//        case 0:
-//            hsbColor = color(0, 100, 45, 7);
-//            break;
-//        case 1:
-//            hsbColor = color(120, 100, 45, 6);
-//            break;
-//        case 2:
-//            hsbColor = color(240, 100, 40, 6);
-//            break;
-//    }
-//    colorMode(RGB);
-//    noiseShapeColor = new NoFillShapeColor(hsbColor);
+
     frameCounter.resetCount();
     frameCounter.on();
     loop();
