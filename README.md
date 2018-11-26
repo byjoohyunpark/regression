@@ -3,4 +3,5 @@ This experiment uses the feature extraction method over the MobileNet model with
 
 
 [Live Project](https://byjoohyunpark.github.io/regression-curve/)
+[Demo](https://vimeo.com/302913591)
 
