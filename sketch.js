@@ -8,102 +8,109 @@ let samples = 0;
 let positionX = 140;
 let t = 0;
 let bool = false;
+let caption = document.querySelector("#caption");
+let box = document.querySelector(".box");
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  video = createCapture(VIDEO);
-  video.hide();
-  featureExtractor = ml5.featureExtractor('MobileNet', modelReady);
-  regressor = featureExtractor.regression(video);
-  createButtons();
-    
+    createCanvas(windowWidth, windowHeight);
+    video = createCapture(VIDEO);
+    video.hide();
+    featureExtractor = ml5.featureExtractor('MobileNet', modelReady);
+    regressor = featureExtractor.regression(video);
+    createButtons();
+
 
     frameRate(IDEAL_FRAME_RATE);
     unitLength = Math.min(width, height) / 640;
     unitSpeed = unitLength / IDEAL_FRAME_RATE;
     strokeWeight(Math.max(1, 1 * unitLength));
     backgroundColor = color(252);
-    frameCounter = new TimedFrameCounter(true, 60 * IDEAL_FRAME_RATE, () => { noLoop(); });
+    frameCounter = new TimedFrameCounter(true, 60 * IDEAL_FRAME_RATE, () => {
+        noLoop();
+    });
     initialize();
-    
+
 }
 
 function draw() {
-
-    
     let hsbColor = color(t, 0, 255, random(20));
-//    noiseShapeColor = new NoFillShapeColor(hsbColor);
+    //    noiseShapeColor = new NoFillShapeColor(hsbColor);
     noFill();
     stroke(hsbColor);
-    
-    
-    if(bool){
-    noiseShape.step();
-    noiseShape.draw();
-    frameCounter.step();
-}    
 
-  t = slider.value()*360;
-  console.log(t);
-  image(video, 0, windowHeight-150, 200, 150);
+    if (bool) {
+        noiseShape.step();
+        noiseShape.draw();
+        frameCounter.step();
+    }
+
+    t = slider.value() * 360;
+    //    console.log(t);
+
+
+    if (caption.getBoundingClientRect().height <= 450) {
+        box.style.display = "block";
+        image(video, 200, windowHeight - 150, 200, 150);
+    } else {
+ box.style.display = "none";        
+        image(video, 0, windowHeight - 150, 200, 150);
+    }
 }
 
 // A function to be called when the model has been loaded
 function modelReady() {
-  select('#loading').html('Model loaded!');
+    select('#loading').html('Model loaded!');
 }
 
 // Classify the current frame.
 function predict() {
-  regressor.predict(gotResults);
+    regressor.predict(gotResults);
     bool = true;
 }
 
 // A util function to create UI buttons
 function createButtons() {
-  slider = select('#slider');
-  // When the Dog button is pressed, add the current frame
-  // from the video with a label of "dog" to the classifier
-  addSample = select('#addSample');
-  addSample.mousePressed(function() {
-    regressor.addImage(slider.value());
-    select('#amountOfSamples').html(samples++);
-  });
-
-  // Train Button
-  train = select('#train');
-  train.mousePressed(function() {
-    regressor.train(function(lossValue) {
-      if (lossValue) {
-        loss = lossValue;
-        select('#loss').html('Loss: ' + loss);
-      } else {
-        select('#loss').html('Done Training.<br> Final Loss: ' + loss);
-      }
+    slider = select('#slider');
+    // When the Dog button is pressed, add the current frame
+    // from the video with a label of "dog" to the classifier
+    addSample = select('#addSample');
+    addSample.mousePressed(function () {
+        regressor.addImage(slider.value());
+        select('#amountOfSamples').html(samples++);
     });
-  });
 
-  // Predict Button
-  buttonPredict = select('#buttonPredict');
-  buttonPredict.mousePressed(predict);
+    // Train Button
+    train = select('#train');
+    train.mousePressed(function () {
+        regressor.train(function (lossValue) {
+            if (lossValue) {
+                loss = lossValue;
+                select('#loss').html('Loss: ' + loss);
+            } else {
+                select('#loss').html('Done Training.<br> Final Loss: ' + loss);
+            }
+        });
+    });
+
+    // Predict Button
+    buttonPredict = select('#buttonPredict');
+    buttonPredict.mousePressed(predict);
 }
 
 // Show the results
 function gotResults(err, result) {
-  if (err) {
-    console.error(err);
-  }
-  positionX = map(result, 0, 1, 0, width);
-  slider.value(result);
-  predict();
+    if (err) {
+        console.error(err);
+    }
+    positionX = map(result, 0, 1, 0, width);
+    slider.value(result);
+    predict();
 }
 
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+    resizeCanvas(windowWidth, windowHeight);
 }
-
-
 
 
 function initialize() {
@@ -121,6 +128,7 @@ function initialize() {
     frameCounter.on();
     loop();
 }
+
 function keyPressed() {
     if (keyCode === 32)
         initialize();
@@ -194,10 +202,8 @@ class NoiseShape {
         this.vertexCount = params.vertexCount || Math.floor(0.75 * params.shapeSize);
         this.noiseDistanceScale = params.noiseDistanceScale || params.shapeSize / 320;
         this.noiseTimeScale = params.noiseTimeScale || 0.005;
-        this.xNoiseParameterOffset
-            = createVector(Math.random(), Math.random(), Math.random()).mult(1024);
-        this.yNoiseParameterOffset
-            = createVector(Math.random(), Math.random(), Math.random()).mult(1024);
+        this.xNoiseParameterOffset = createVector(Math.random(), Math.random(), Math.random()).mult(1024);
+        this.yNoiseParameterOffset = createVector(Math.random(), Math.random(), Math.random()).mult(1024);
         this.noiseTime = 0;
     }
     step() {
@@ -256,7 +262,7 @@ class FrameCounter {
     }
 }
 class TimedFrameCounter extends FrameCounter {
-    constructor(on, duration = 0, completeBehavior = () => { }) {
+    constructor(on, duration = 0, completeBehavior = () => {}) {
         super();
         this.isOn = on;
         this.isCompleted = false;
@@ -334,7 +340,7 @@ class NoFillShapeColor extends AbstractShapeColor {
     }
 }
 class NullShapeColor extends AbstractShapeColor {
-    apply() { }
+    apply() {}
 }
 //
 // ------------ Random int -----------------------------
@@ -360,4 +366,3 @@ function getCurrentISODate() {
     const dateTime = new Date().toISOString();
     return dateTime.substring(0, dateTime.indexOf('T'));
 }
-
