@@ -21,7 +21,7 @@ function setup() {
 
 
     frameRate(IDEAL_FRAME_RATE);
-    unitLength = Math.min(width, height) / 640;
+    unitLength = Math.min(window.innerWidth, window.innerHeight) / 640;
     unitSpeed = unitLength / IDEAL_FRAME_RATE;
     strokeWeight(Math.max(1, 1 * unitLength));
     backgroundColor = color(252);
@@ -52,7 +52,7 @@ function draw() {
         box.style.display = "block";
         image(video, 200, windowHeight - 150, 200, 150);
     } else {
- box.style.display = "none";        
+        box.style.display = "none";
         image(video, 0, windowHeight - 150, 200, 150);
     }
 }
@@ -102,7 +102,7 @@ function gotResults(err, result) {
     if (err) {
         console.error(err);
     }
-    positionX = map(result, 0, 1, 0, width);
+    positionX = map(result, 0, 1, 0, window.innerWidth);
     slider.value(result);
     predict();
 }
@@ -110,6 +110,7 @@ function gotResults(err, result) {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+        initialize();
 }
 
 
@@ -122,7 +123,7 @@ function initialize() {
         noiseMagnitudeFactor: 5.2, //2.2
         noiseTimeScale: random(0.001, 0.005),
     });
-    noiseShape.centerPosition.set(0.5 * width + 200, 0.5 * height);
+    noiseShape.centerPosition.set(0.5 * (window.innerWidth - 200) + 200, 0.5 * window.innerHeight);
 
     frameCounter.resetCount();
     frameCounter.on();
