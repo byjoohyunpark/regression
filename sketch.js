@@ -5,7 +5,7 @@ let loss;
 let slider;
 let addSample;
 let samples = 0;
-let positionX = 140;
+//let positionX = 140;
 let t = 0;
 let bool = false;
 let caption = document.querySelector("#caption");
@@ -102,7 +102,7 @@ function gotResults(err, result) {
     if (err) {
         console.error(err);
     }
-    positionX = map(result, 0, 1, 0, window.innerWidth);
+//    positionX = map(result, 0, 1, 0, window.innerWidth);
     slider.value(result);
     predict();
 }
@@ -130,10 +130,10 @@ function initialize() {
     loop();
 }
 
-function keyPressed() {
-    if (keyCode === 32)
-        initialize();
-}
+//function keyPressed() {
+//    if (keyCode === 32)
+//        initialize();
+//}
 
 
 
